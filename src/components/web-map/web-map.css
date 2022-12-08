@@ -1,0 +1,18 @@
+@import url('https://js.arcgis.com/4.25/@arcgis/core/assets/esri/themes/light/main.css');
+
+:host {
+  display: block;
+}
+
+.esri-view {
+  min-height: 250px;
+  min-width: 250px;
+  padding: 0;
+}
+
+web-map .esri-input {
+  font-family: "Avenir Next","Helvetica Neue",Helvetica,Arial,sans-serif !important;
+  font-size: 14px !important;
+}
+
+

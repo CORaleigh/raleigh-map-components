@@ -1,0 +1,136 @@
+@import url("https://raw.githubusercontent.com/Esri/calcite-web/master/dist/css/calcite-web.min.css");
+
+.inputs{
+    display:inline-flex;
+    width: 100%;
+}
+.questions{
+    display:inline-flex;
+    width: 100%;
+}
+.totals{
+    display:inline-flex;
+    width: 65%;
+}
+
+.questions .totals {
+    padding-top:0.25em;
+}
+
+.total{
+    margin: 0 0 0 1em;
+
+}
+
+.next{
+    float: right;
+}
+
+.container {
+    margin:0;
+    background-color: #f2f3f4;
+    width: 100%;
+    padding: 1em 1em 1em 1em;
+}
+
+.title{
+    padding-left:1em;
+    padding-top:0.5em;
+    padding-bottom: 0.5em;
+    margin-bottom: 0;
+}
+
+
+input[type=number] {
+  
+    width: 100px;
+    margin-left: 1em;
+}
+input[type=range] {
+    width: 100%;
+}
+
+
+.results {
+    background-color: #231f20;
+    color:white;
+    width: 100%;
+    display: inline-flex;
+    padding: 0.5em 1em 0.5em 1em;
+
+}
+
+.results .totals {
+    width:100%;
+}
+
+.btn-hidden {
+    visibility: hidden;
+}
+
+
+
+
+.values {
+    align-items: flex-end;
+    margin-bottom: 0.75em !important;
+
+}
+
+.active {
+    display: block;
+}
+.inactive {
+    display: none;
+}
+
+@media (max-width: 37.5em){
+    input[type=number] {
+        float: none;
+        width: 80px;
+    }
+    input[type=range] {
+        float: none;
+        margin: 0 
+    }
+    .questions{
+        display:block;
+    }
+    .totals {
+        width: 100%;
+    }
+    .total {
+        margin: 0 1em 0 0;
+    }
+    .results{
+        display: block;
+    }
+    .results .totals {
+        margin-top:1em;
+    }
+    
+}
+
+input[type=range]:hover{
+    border: none !important;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+}
+input[type=range]:focus{
+    border: none !important;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+}
+
+
+label {
+    margin: 0;
+}
+
+#waterUsage {
+    margin: 0 1em 0 1em;
+}
+.results h3 {
+    color: white;
+    width: 100%;
+}
