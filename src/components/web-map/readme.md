@@ -26,7 +26,7 @@
 
 ## Methods
 
-### `geocodeAddress(view: any, address: any, zoom: any) => Promise<void>`
+### `geocodeAddress(view: __esri.MapView, address: any, zoom: any) => Promise<void>`
 
 
 

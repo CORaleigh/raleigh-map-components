@@ -36,7 +36,7 @@ export namespace Components {
         "address": string;
         "basemap": string;
         "center": string;
-        "geocodeAddress": (view: any, address: any, zoom: any) => Promise<void>;
+        "geocodeAddress": (view: __esri.MapView, address: any, zoom: any) => Promise<void>;
         "height": string;
         "layerlist": boolean;
         "legend": boolean;

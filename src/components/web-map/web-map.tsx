@@ -1,7 +1,8 @@
 import { Component, Prop, h, Element, State } from '@stencil/core';
 import { Host, HTMLStencilElement, Method, Watch } from '@stencil/core/internal';
 import esriConfig from "@arcgis/core/config.js";
-
+import * as type from '@arcgis/core/smartMapping/symbology/type';
+import * as reactiveUtils from "@arcgis/core/core/reactiveUtils";
 
 @Component({
   tag: 'web-map',
@@ -153,7 +154,7 @@ public async loadLayerList(view) {
       await import(`@arcgis/core/widgets/Expand`)
 
   ]);
-  const expand = new Expand({id: 'layerlist',view: view, content: new LayerList({container: document.createElement('div'), view: view}) });
+  const expand = new Expand({id: 'layerlist',view: view, content: new LayerList({container: document.createElement('div'), view: view}), mode: 'floating' });
   view.ui.add(expand ,'top-right');
 }
 @Method()
@@ -166,10 +167,28 @@ public async loadLegend(view) {
       await import(`@arcgis/core/widgets/Expand`)
 
   ]);
-  const expand = new Expand({id: 'legend', view: view, content: new Legend({container: document.createElement('div'), view: view}) });
+  const expand = new Expand({id: 'legend', view: view, content: new Legend({container: document.createElement('div'), view: view}), mode: 'floating' });
   view.ui.add(expand ,'top-right');
 }
-
+public getPinSymbol(view: __esri.MapView) {
+  return {
+    type: "simple-marker", 
+    path: 'M15.65,36.85c1.9,2.3,4.47,4.93,7.8,7.45c0.49,0.37,0.99,0.73,1.51,1.09c0.54-0.37,1.07-0.75,1.58-1.14'+
+    'c10.44-7.92,15.7-18.63,15.7-24.62c0-8.93-6.84-16.3-15.56-17.13c-0.54-0.05-1.09-0.08-1.64-0.08l0,0l0,0l0,0l0,0'+
+    'c-0.72,0-1.42,0.06-2.11,0.14c-8.5,1.05-15.1,8.3-15.1,17.07C7.81,24.34,10.89,31.09,15.65,36.85z M22.91,4.38'+
+    'c0.69-0.1,1.39-0.16,2.11-0.16c0.56,0,1.1,0.03,1.65,0.09c7.73,0.83,13.77,7.38,13.77,15.33c0,5.71-5.17,15.99-15.42,23.54'+
+    'C14.77,35.63,9.6,25.35,9.6,19.64C9.6,11.85,15.4,5.41,22.91,4.38z'+
+    'M25.11,9.97c-5.67,0-10.29,4.62-10.29,10.29s4.62,10.29,10.29,10.29S35.4,25.93,35.4,20.26'+
+    'S30.79,9.97,25.11,9.97z M25.11,28.61c-4.6,0-8.35-3.74-8.35-8.35s3.74-8.35,8.35-8.35s8.35,3.74,8.35,8.35S29.72,28.61,25.11,28.61'              ,
+    size: 24,
+    color:  type.getSchemes({basemap: view.map.basemap, geometryType: 'point'} as any).basemapTheme === 'light' ? '#000000' : '#FFFFFFF',
+    outline: {  // autocasts as new SimpleLineSymbol()
+        color: type.getSchemes({basemap: view.map.basemap, geometryType: 'point'} as any).basemapTheme === 'light' ? '#000000' : '#FFFFFFF',
+        width: "0.75px"
+    },              
+    yoffset: 4
+  } as any;
+}
 @Method()
 public async loadSearch(view) {
   const [
@@ -178,7 +197,20 @@ public async loadSearch(view) {
       await import(`@arcgis/core/widgets/Search`)
 
   ]);
-  const search = new Search({id: 'search', container: document.createElement('div'), view: view});
+  const search = new Search({id: 'search', container: document.createElement('div'), view: view, goToOverride: (view: __esri.MapView, goToParams) => {
+    if (this.zoom) {
+      goToParams.target.zoom = this.zoom;
+    }
+    view.graphics.removeAll();
+    return view.goTo(goToParams.target, goToParams.options); 
+  }});
+  reactiveUtils.whenOnce(() => search.viewModel.state === 'ready').then(() => {
+    search.viewModel.allSources.forEach((source: __esri.LocatorSearchSource | __esri.LayerSearchSource) => {
+      if ((source as any).url) {
+        (source as __esri.LocatorSearchSource).resultSymbol = this.getPinSymbol(view);
+      }
+    })
+  });
   view.ui.add(search ,'top-left');
 }
 @Method()
@@ -191,12 +223,19 @@ public async zoomTo(view) {
   ]);
   view.goTo({center: new Point({longitude: parseFloat(this.center.split(',')[0]), latitude: parseFloat(this.center.split(',')[1]), spatialReference: {wkid: 4326}}), zoom: this.zoom})
 }
+public addPin(view: __esri.MapView, location) {
+  const graphic = {attributes: {}, geometry: location, symbol: this.getPinSymbol(view)} as any;
+  
+  view.graphics.removeAll();
+  view.graphics.add(graphic);
+}
 @Method()
-public async geocodeAddress(view, address, zoom) {
+public async geocodeAddress(view: __esri.MapView, address, zoom) {
 await Promise.all([
       await import(`@arcgis/core/rest/locator`).then(locator => {
         locator.addressToLocations('https://maps.raleighnc.gov/arcgis/rest/services/Locators/Locator/GeocodeServer',
         {address: {SingleLine: address}}).then(candidates => {
+          this.addPin(view, candidates[0].location);
           view.goTo({target: candidates[0].location, zoom: zoom ? zoom : 16});
         })
       })
