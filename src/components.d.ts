@@ -36,6 +36,7 @@ export namespace Components {
         "address": string;
         "basemap": string;
         "center": string;
+        "dock": string;
         "geocodeAddress": (view: __esri.MapView, address: any, zoom: any) => Promise<void>;
         "height": string;
         "layerlist": boolean;
@@ -115,6 +116,7 @@ declare namespace LocalJSX {
         "address"?: string;
         "basemap"?: string;
         "center"?: string;
+        "dock"?: string;
         "height"?: string;
         "layerlist"?: boolean;
         "legend"?: boolean;

@@ -12,7 +12,8 @@
 | `address`   | `address`   |             | `string`  | `undefined` |
 | `basemap`   | `basemap`   |             | `string`  | `undefined` |
 | `center`    | `center`    |             | `string`  | `undefined` |
-| `height`    | `height`    |             | `string`  | `"300px"`   |
+| `dock`      | `dock`      |             | `string`  | `undefined` |
+| `height`    | `height`    |             | `string`  | `"100%"`    |
 | `layerlist` | `layerlist` |             | `boolean` | `false`     |
 | `legend`    | `legend`    |             | `boolean` | `false`     |
 | `mapId`     | `map-id`    |             | `string`  | `undefined` |

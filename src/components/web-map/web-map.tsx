@@ -23,8 +23,9 @@ export class WebMap {
   @Prop() center: string;
   @Prop() zoom: number;
   @Prop() address: string;
+  @Prop() dock: string;
   @Prop() width: string = "100%";
-  @Prop() height: string = "300px";
+  @Prop() height: string = "100%";
   private mapRef?: HTMLDivElement;
 
   view: any;
@@ -59,6 +60,11 @@ searchChanged(newValue) {
 @Watch('popup')
 popupChanged(newValue) {
   newValue ? this.view.popup.autoOpenEnabled = true : this.view.popup.autoOpenEnabled = false;
+}
+@Watch('dock')
+dockChanged(newValue) {
+  newValue ? (this.view as __esri.MapView).popup.dockOptions.position = this.dock : null;
+  newValue ? (this.view as __esri.MapView).popup.dockEnabled = true : false;
 }
 @Watch('zoom')
 zoomChanged(newValue) {
@@ -296,7 +302,12 @@ public removeNavigation(view)
       this.view = await this.loadMap('arcgis-community');
     }
     this.view.ui.components = ["attribution"];
+
     this.view.when(() => {
+      if (this.dock) {
+        this.view.popup.dockEnabled = true;
+        this.view.popup.dockOptions.position = this.dock;
+      }      
       if (this.layerlist) {
         this.loadLayerList(this.view);
       }

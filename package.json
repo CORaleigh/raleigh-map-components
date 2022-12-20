@@ -1,6 +1,6 @@
 {
   "name": "raleigh-map-components",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "Stencil Component Starter",
   "main": "dist/index.cjs.js",
   "module": "dist/index.js",
@@ -28,13 +28,13 @@
   "dependencies": {
     "@arcgis/core": "^4.25.5",
     "@esri/calcite-components": "^1.0.0-beta.98",
-    "@stencil/core": "^2.13.0"
+    "@stencil/core": "^2.20.0"
   },
   "devDependencies": {
     "@types/jest": "^27.0.3",
     "jest": "^27.4.5",
     "jest-cli": "^27.4.5",
-    "puppeteer": "^10.0.0"
+    "puppeteer": "^19.4.0"
   },
   "license": "MIT"
 }
