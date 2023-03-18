@@ -105,7 +105,7 @@ export class FindMyService {
             this.councilInfo.push(featureSet.features[0]);
         }
       });
-      sections = [...sections, { title: map.portalItem.title, layers: layers }];
+      sections = [...sections, { title: map.portalItem.title, layers: layers, map: map }];
       if (mapCount === maps.length) {
         this.sections = [...sections];
         sections.sort((a, b) => {
@@ -123,14 +123,15 @@ export class FindMyService {
     });
 
   }
-  async loadFeatureWidget(id, feature) {
+  async loadFeatureWidget(id, feature, webmap) {
     const [
       { default: Feature }
     ] = await Promise.all([
         await import(`@arcgis/core/widgets/Feature`)
     ]);    
       setTimeout(() => {
-         new Feature({ container: id, graphic: feature });
+        console.log(webmap);
+         new Feature({ container: id, graphic: feature, map: webmap, spatialReference: {wkid: 10200} });
       },100);        
 
 }  
@@ -164,19 +165,19 @@ componentWillLoad() {
         <div class="o-layout-sidebar-after o-layout-sidebar-after--tight">
         {this.council && this.councilInfo && <div>
         {this.councilInfo.map((info) => {
-        return <div id="councilDiv" ref={el => {this.councilDiv = el as HTMLElement;this.loadFeatureWidget(this.councilDiv, info);}}>
+        return <div id="councilDiv" ref={el => {this.councilDiv = el as HTMLElement;this.loadFeatureWidget(this.councilDiv, info, undefined);}}>
 
         </div>
         })}
         </div>}
-        <ol class={this.council ? 'o-layout-grid o-layout-grid--3  o-layout-sidebar-after__primary' : 'o-layout-grid o-layout-grid--3'}>{this.sections.map((webmap) => {
-            return<li class="o-layout-grid__item"><div><h3>{webmap.title}</h3>
-            {webmap.layers.map((layer) => {
+        <ol class={this.council ? 'o-layout-grid o-layout-grid--3  o-layout-sidebar-after__primary' : 'o-layout-grid o-layout-grid--3'}>{this.sections.map((section) => {
+            return<li class="o-layout-grid__item"><div><h3>{section.title}</h3>
+            {section.layers.map((layer) => {
                 return layer.features.length > 0 ? <div>
                 {layer.features.map((feature, i) => {
                   if (!(this.council && layer.title.toLowerCase().includes('council'))) {
                     
-                    return <div id={layer.id + '_' + i} ref={el => this.loadFeatureWidget(el, feature)}></div>
+                    return <div id={layer.id + '_' + i} ref={el => this.loadFeatureWidget(el, feature, section.map)}></div>
                   }
 
                 })}</div>
