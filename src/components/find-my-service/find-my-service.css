@@ -136,4 +136,9 @@ find-my-service h2.esri-widget__heading {
     font-family: "Typold W05",sans-serif;
 }
 
+@media only screen and (max-width: 400px) {
+    find-my-service .esri-search__submit-button {
+        display: none;
+    }
+  }
   
